@@ -11,13 +11,20 @@
 		h1, label, tr, td, h5, p{
 			color: white;	
 		}
-		label, .head {
+		h1 {
+			text-align: center;
+			padding-left: 110px;
+			padding-right: 110px;
+		}
+		label {
 			font-weight: bold;
-			font-size: 21px;
+			font-size: 20px
 		}
 		.head {
+			font-weight: bold;
 			padding-left: 10px;
 			padding-right: 10px;
+			font-size: 16px;
 		}
 		div, h1{
 			margin: 20px;
@@ -28,46 +35,59 @@
 		.extratitle {
 			padding-right: 8px;
 		}
+		.result-table {
+			top: 300px;
+			position: relative;
+		}
+		image {
+			margin-left: 250px;
+		}
+		.absolute {
+			position: absolute;
+			margin: 5px;
+		}
 	</style>
 	<script type="text/javascript">
-		var numberofrows = 20
+		var numberofrows = 10
+		var maximumchancepercentage = 30
 		var numberofitems, minnumberofsacrifices, basechance, chanceperitemincrease
 	</script>
 	<body>
-		<h1>Best chance to enchant weapon</h1>
-		<form id="inputs">
-			<div class=float-left>
-				<table>
-					<tr>
-						<td align="right"><label>Number of items</label></td>
-						<td><input type="number" id="numberofitems" class="forminput" min=0 value="10" style="text-align: center;"></td>
-					</tr><tr>
-						<td align="right"><label>Minimum number of sacrifices</label></td>
-						<td><input type="number" id="minnumberofsacrifices" class="forminput" min=0 value="3" style="text-align: center;"></td>
-					</tr><tr>
-						<td align="right"><label>% Base chance</label></td>
-						<td><input type="number" id="basechance" class="forminput" min=0 value="25" style="text-align: center;"></td>
-					</tr><tr>
-						<td align="right"><label>% Chance per item increase</label></td>
-						<td><input type="number" id="chanceperitemincrease" class="forminput" min=0 value="5" style="text-align: center;"></td>
-					</tr><tr>
-						<td></td><td><input type="button" name="btnSubmit" value="Submit" onclick="myFunction()"></td>
-					</tr>
-				</table>
-				<img src="https://i.imgur.com/Lb5g37m.gif" width="380">
-				<p>^please dont mind compression artifacting^</p>
+		<div class="float-left absolute">
+			<h1>Best chance to enchant weapon</h1>
+				<form id="inputs">
+					<div class=absolute>
+						<table>
+							<tr>
+								<td align="right"><label>Number of items: </label></td>
+								<td><input type="number" id="numberofitems" class="forminput" min=0 value="10" style="text-align: center;"></td>
+							</tr><tr>
+								<td align="right"><label>Minimum number of sacrifices: </label></td>
+								<td><input type="number" id="minnumberofsacrifices" class="forminput" min=0 value="3" style="text-align: center;"></td>
+							</tr><tr>
+								<td align="right"><label>% Base chance: </label></td>
+								<td><input type="number" id="basechance" class="forminput" min=0 value="20" style="text-align: center;"></td>
+							</tr><tr>
+								<td align="right"><label>% Chance per item increase: </label></td>
+								<td><input type="number" id="chanceperitemincrease" class="forminput" min=0 value="5" style="text-align: center;"></td>
+							</tr><tr>
+								<td></td><td><input type="button" name="btnSubmit" value="Submit" onclick="myFunction()"></td>
+							</tr>
+						</table>
+					</form>
+					<h5 id="max">Max: </h5>
+					<table id="myTable" class='table, table-hover table-bordered'>
+					</table>
+				</div>
+			<div class="image float-right">
+				<img src="https://i.imgur.com/Lb5g37m.gif" width="360">
 			</div>
-		</form>
-		<h5 id="max">Max: </h5>
-		<div class=float-none>
-			<table id="myTable" class='table, table-hover table-bordered'>
-			</table>
-
 		</div>
 	</body>
 	<script type="text/javascript">
+		//<img src="https://i.imgur.com/Lb5g37m.gif" width="360">
 		var table = document.getElementById("myTable");
-		var failure, chances, row, cell1, cell2
+		var failure, chances, maxsacrifices, row, cell1, cell2, cell3, cell4
 		var values = [];
 		function myFunction() {
 			numberofitems = parseInt(document.getElementById('numberofitems').value)
@@ -83,26 +103,42 @@
 		    cell1.innerHTML = "# of sacrifices"
 		    cell1.classList.add("head")
 		    cell2 = row.insertCell(1)
-		    cell2.innerHTML = "Chance"
+		    cell2.innerHTML = "Total Chance"
 		    cell2.classList.add("head")
+		    cell3 = row.insertCell(2)
+		    cell3.innerHTML = "Chance per"
+		    cell3.classList.add("head")
+		    cell4 = row.insertCell(3)
+		    cell4.innerHTML = "Attempts"
+		    cell4.classList.add("head")
 
-			for (var i=0; i<=numberofrows; i++) {
+		    maxsacrifices = (maximumchancepercentage-basechance)/chanceperitemincrease
+			for (var i=0; i<=maxsacrifices; i++) {
 				row = table.insertRow(-1)
 				row.id = "row" + i
 
 				cell1 = row.insertCell(0);
-				cell1.innerHTML = i + " extras ";
+				cell1.innerHTML = i + " sacrifices";
 				cell1.classList.add("extratitle")
 
 				chances = Math.floor(numberofitems/(minnumberofsacrifices+i))
 				failure = (100-basechance-i*chanceperitemincrease)/100
 				values.push(Math.round((1-Math.pow(failure, chances))*10000)/100)
 				cell2 = row.insertCell(1);
-				cell2.innerHTML = Math.round((1-Math.pow(failure, chances))*10000)/100 + "%"
+				cell2.innerHTML = parseFloat(Math.round((1-Math.pow(failure, chances))*10000)/100).toFixed(2) + "%"
 				cell2.classList.add("chance")
+
+				cell3 = row.insertCell(2);
+				cell3.innerHTML = parseFloat(failure).toFixed(2)*100 + "%"
+				cell3.classList.add("chance")
+
+				cell4 = row.insertCell(3)
+				cell4.innerHTML = chances
+				cell4.classList.add("chance")
+
 			}
 			values.indexOf(Math.max(...values))
-			document.getElementById("max").innerHTML = "Max: " + Math.max(...values) + "%, " + values.indexOf(Math.max(...values)) + " extras"
+			document.getElementById("max").innerHTML = "Max: " + Math.max(...values) + "% with " + values.indexOf(Math.max(...values)) + " sacrifices"
 			values = []
 		}
 	</script>
