@@ -60,16 +60,16 @@
 						<table>
 							<tr>
 								<td align="right"><label>Number of items: </label></td>
-								<td><input type="number" id="numberofitems" class="forminput" min=0 value="10" style="text-align: center;"></td>
+								<td><input type="number" id="numberofitems" class="forminput" min=0 value="10" onchange="myFunction()" style="text-align: center;"></td>
 							</tr><tr>
 								<td align="right"><label>Minimum number of sacrifices: </label></td>
-								<td><input type="number" id="minnumberofsacrifices" class="forminput" min=0 value="3" style="text-align: center;"></td>
+								<td><input type="number" id="minnumberofsacrifices" class="forminput" min=0 value="3" onchange="myFunction()" style="text-align: center;"></td>
 							</tr><tr>
 								<td align="right"><label>% Base chance: </label></td>
-								<td><input type="number" id="basechance" class="forminput" min=0 value="20" style="text-align: center;"></td>
+								<td><input type="number" id="basechance" class="forminput" min=0 value="20" onchange="myFunction()" style="text-align: center;"></td>
 							</tr><tr>
 								<td align="right"><label>% Chance per item increase: </label></td>
-								<td><input type="number" id="chanceperitemincrease" class="forminput" min=0 value="5" style="text-align: center;"></td>
+								<td><input type="number" id="chanceperitemincrease" class="forminput" min=0 value="5" onchange="myFunction()" style="text-align: center;"></td>
 							</tr><tr>
 								<td></td><td><input type="button" name="btnSubmit" value="Submit" onclick="myFunction()"></td>
 							</tr>
@@ -129,7 +129,7 @@
 				cell2.classList.add("chance")
 
 				cell3 = row.insertCell(2);
-				cell3.innerHTML = parseFloat(failure).toFixed(2)*100 + "%"
+				cell3.innerHTML = parseFloat(1-failure).toFixed(2)*100 + "%"
 				cell3.classList.add("chance")
 
 				cell4 = row.insertCell(3)
